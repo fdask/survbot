@@ -8,6 +8,7 @@
    "require-dev": {
    },
    "require": {
+      "slim/slim": "3.8.1"
    },
    "autoload": {
       "classmap": ["src"]

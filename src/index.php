@@ -1,5 +1,5 @@
 <?php
-require '../vendor/autoload.php';
+require 'vendor/autoload.php';
 
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
@@ -11,6 +11,10 @@ $config = [
 ];
 
 $app = new \Slim\App($config);
+
+$app->get('/', function (Request $r, Response $res) {
+	$res->getBody()->write("HELLO WORLD");
+});
 
 $app->get('/hello/{name}', function (Request $request, Response $response) {
 	$name = $request->getAttribute('name');
