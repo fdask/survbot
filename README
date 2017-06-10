@@ -1,0 +1,6 @@
+Facebook Messenger Bot
+
+Built by James Wallace <sausages@gmail.com> 
+Built for Brad Johnson <bjj3303@gmail.com>
+
+This app uses Node.js to handle incoming messages, and outgoing responses via the Facebook Messenger platform!
