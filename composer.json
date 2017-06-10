@@ -1,0 +1,15 @@
+{
+   "name": "fdask/surveybot",
+   "description": "A survey bot for Facebook Messenger",
+   "authors": [{
+      "name": "James Wallace",
+      "email": "sausages@gmail.com"
+   }],
+   "require-dev": {
+   },
+   "require": {
+   },
+   "autoload": {
+      "classmap": ["src"]
+   }
+}
