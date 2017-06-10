@@ -18,11 +18,10 @@ $app->get('/', function (Request $r, Response $res) {
 	$res->getBody()->write($qs['hub_challenge']);
 });
 
-$app->get('/hello/{name}', function (Request $request, Response $response) {
-	$name = $request->getAttribute('name');
-	$response->getBody()->write("Hello, $name");
+$app->post('/', function (Request $req, Response $res) {
+	$parsedBody = $request->getParsedBody();
 
-	return $response;
+	print_r($parsedBody);
 });
 
 $app->run();
