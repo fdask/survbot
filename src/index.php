@@ -13,7 +13,9 @@ $config = [
 $app = new \Slim\App($config);
 
 $app->get('/', function (Request $r, Response $res) {
-	$res->getBody()->write("HELLO WORLD");
+	$qs = $r->getQueryParams();
+
+	$res->getBody()->write($qs['hub.challenge']);
 });
 
 $app->get('/hello/{name}', function (Request $request, Response $response) {
