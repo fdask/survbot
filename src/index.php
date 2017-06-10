@@ -23,7 +23,7 @@ $app->get('/privacypolicy', function (Request $r, Response $res) {
 });
 
 $app->post('/', function (Request $req, Response $res) {
-	$parsedBody = $request->getParsedBody();
+	$parsedBody = $req->getParsedBody();
 
 	$res->getBody()->write(print_r($parsedBody, true));
 });
