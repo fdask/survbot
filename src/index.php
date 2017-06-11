@@ -38,6 +38,12 @@ $app->get('/session', function (Request $req, Response $res) {
 	$res->getBody()->write("Count is " . $_SESSION['count']);
 });
 
+$app->get('/sd', function (Request $req, Response $res) {
+	session_destroy();
+
+	$res->getBody()->write("Session is destroyed!");
+});
+
 $app->post('/', function (Request $req, Response $res) {
 	// get the pageId we're hooked up to!
 	$pageId = Settings::get_ini_value('facebook', 'page_id');
