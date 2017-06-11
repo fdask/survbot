@@ -31,6 +31,7 @@ $app->post('/', function (Request $req, Response $res) {
 	// parse out the message and send a reply!
 	$recipientId = $parsedBody['entry'][0]['messaging'][0]['recipient']['id'];
 
+	/**
 	if ($recipientId == "629947963791983") {
 		$senderId = $parsedBody['entry'][0]['messaging'][0]['sender']['id'];
 		$message = $parsedBody['entry'][0]['messaging'][0]['message']['text'];
@@ -43,6 +44,7 @@ $app->post('/', function (Request $req, Response $res) {
 			error_log("Error sending reply!");
 		}
 	}
+	**/
 });
 
 $app->run();
