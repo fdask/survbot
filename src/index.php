@@ -34,11 +34,13 @@ $app->post('/', function (Request $req, Response $res) {
 
 	error_log("User $senderId said '$message'");
 
+	/**
 	if (FB::sendMessage($senderId, "BEEP!")) {
 		error_log("Reply successfully sent");
 	} else {
 		error_log("Error sending reply!");
 	}
+	**/
 });
 
 $app->run();
