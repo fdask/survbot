@@ -1,9 +1,9 @@
 <?php
 namespace fdask\surveybot;
 
-use fdask\Settings;
+use fdask\surveybot\Settings;
 
-use Facebook\Facebook;
+use \Facebook\Facebook;
 
 /**
 * code relating to the FacebookAPI
@@ -39,7 +39,7 @@ class FB {
 	* @param string $text the message to send
 	* @return boolean
 	**/
-	public static function facebook_send_message($recipientId, $text) {
+	public static function sendMessage($recipientId, $text) {
 		$fb = self::getFb();
 
 		$params = array(
@@ -67,12 +67,37 @@ class FB {
 	}
 
 	/**
+	* outputs info about the given facebook token
+	*
+	* @link https://developers.facebook.com/docs/facebook-login/access-tokens/debugging-and-error-handling
+	* @param string $token
+	* @return false|array
+	**/
+	public static function debugToken($token) {
+		$fb = self::getFb();
+
+		try {
+			$response = $fb->get("/debug_token?input_token=$token");
+
+			$ret = $response->getDecodedBody();
+
+			if ($ret) {
+				return $ret;
+			}
+		} catch (\Exception $e) {
+			print_r($e);
+		}
+
+		return false;
+	}
+
+	/**
 	* code to iterate through a faceboko result set
 	*
 	* @param object $response
 	* @return false|array
 	**/
-	private static function _facebook_graph_pager($response) {
+	private static function _graphPager($response) {
 		$fb = self::getFb();
 
 		$ret = array();
@@ -87,31 +112,6 @@ class FB {
 			} while ($feedEdge = $fb->next($feedEdge));
 
 			return $ret;
-		} catch (\Exception $e) {
-			print_r($e);
-		}
-
-		return false;
-	}
-
-	/**
-	* outputs info about the given facebook token
-	*
-	* @link https://developers.facebook.com/docs/facebook-login/access-tokens/debugging-and-error-handling
-	* @param string $token
-	* @return false|array
-	**/
-	public static function facebook_debug_token($token) {
-		$fb = self::getFb();
-
-		try {
-			$response = $fb->get("/debug_token?input_token=$token");
-
-			$ret = $response->getDecodedBody();
-
-			if ($ret) {
-				return $ret;
-			}
 		} catch (\Exception $e) {
 			print_r($e);
 		}

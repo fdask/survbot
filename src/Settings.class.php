@@ -18,7 +18,7 @@ class Settings {
 
 		$bits = explode('/', str_replace('\\', '/', $curDir));
 
-		array_pop($bits);
+		// we want the directory up from this one!
 		array_pop($bits);
 
 		return implode('/', $bits);
