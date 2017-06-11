@@ -29,18 +29,20 @@ $app->post('/', function (Request $req, Response $res) {
 	$parsedBody = $req->getParsedBody();
 
 	// parse out the message and send a reply!
-	$senderId = $parsedBody['entry'][0]['messaging'][0]['sender']['id'];
-	$message = $parsedBody['entry'][0]['messaging'][0]['message']['text'];
+	$recipientId = $parsedBody['entry'][0]['messaging'][0]['recipient']['id'];
 
-	error_log("User $senderId said '$message'");
+	if ($recipientId == "629947963791983") {
+		$senderId = $parsedBody['entry'][0]['messaging'][0]['sender']['id'];
+		$message = $parsedBody['entry'][0]['messaging'][0]['message']['text'];
 
-	/**
-	if (FB::sendMessage($senderId, "BEEP!")) {
-		error_log("Reply successfully sent");
-	} else {
-		error_log("Error sending reply!");
+		error_log("User $senderId said '$message'");
+
+		if (FB::sendMessage($senderId, "BEEP!")) {
+			error_log("Reply successfully sent");
+		} else {
+			error_log("Error sending reply!");
+		}
 	}
-	**/
 });
 
 $app->run();
