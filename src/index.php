@@ -51,11 +51,19 @@ $app->post('/', function (Request $req, Response $res) {
 							} else {
 								error_log("Error sending reply!");
 							}
+						} else {
+							error_log("Message is addressed to $recipientId!  We're looking for ones addressed to $pageId");
 						} 
+					} else {
+						error_log("'message' isnt set in the message variable!");
 					}
 				}
+			} else {
+				error_log("'messaging' isnt set in the entry variable!");
 			}
 		}
+	} else {
+		error_log("'entry' isnt set in the parsedBody variable!");
 	}
 });
 
