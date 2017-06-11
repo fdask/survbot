@@ -1,4 +1,6 @@
 <?php
+session_start();
+
 require '../vendor/autoload.php';
 
 use \Psr\Http\Message\ServerRequestInterface as Request;
@@ -25,6 +27,17 @@ $app->get('/privacypolicy', function (Request $r, Response $res) {
 	$res->getBody()->write(file_get_contents("pp.html"));
 });
 
+// testing out the session handling
+$app->get('/session', function (Request $req, Response $res) {
+	if (!isset($_SESSION['count'])) {
+		$_SESSION['count'] = 1;
+	} else {
+		$_SESSION['count']++;
+	}
+
+	$res->getBody()->write("Count is " . $_SESSION['count']);
+});
+
 $app->post('/', function (Request $req, Response $res) {
 	// get the pageId we're hooked up to!
 	$pageId = Settings::get_ini_value('facebook', 'page_id');
@@ -41,6 +54,8 @@ $app->post('/', function (Request $req, Response $res) {
 						$recipientId = $message['recipient']['id'];
 
 						if ($recipientId == $pageId) {
+							// see if we already have a session for this user!
+							
 							$senderId = $message['sender']['id'];
 							$message = $message['message']['text'];
 
