@@ -1,4 +1,6 @@
 <?php
+session_start();
+
 require '../vendor/autoload.php';
 
 use \Psr\Http\Message\ServerRequestInterface as Request;
@@ -71,8 +73,8 @@ $app->post('/', function (Request $req, Response $res) {
 							$senderId = $message['sender']['id'];
 							$message = $message['message']['text'];
 
-							session_name("survey-$senderId");
-							session_start();
+							//session_name("survey-$senderId");
+							//session_start();
 
 							error_log(print_r($_SESSION, true));
 
