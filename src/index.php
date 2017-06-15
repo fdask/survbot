@@ -33,6 +33,20 @@ $app->get('/', function (Request $r, Response $res) {
 	$res->getBody()->write($qs['hub_challenge']);
 });
 
+$app->get('/dump', function (Request $r, Response $res) use ($m) {
+	$keys = $m->getAllKeys();
+
+	if (!empty($keys)) {
+		$data = array();
+
+		foreach ($keys as $key) {
+			$data[$key] = $m->get($key);			
+		}
+	}
+
+	$res->getBody()->write(print_r($data, true));
+});
+
 $app->get('/test', function (Request $r, Response $res) use ($m) {
 	$x = $m->get("abc");
 
