@@ -33,7 +33,7 @@ $app->get('/', function (Request $r, Response $res) {
 	$res->getBody()->write($qs['hub_challenge']);
 });
 
-$app->get('/test', function (Request $r, Response $res) {
+$app->get('/test', function (Request $r, Response $res) use ($m) {
 	$x = $m->get("abc");
 
 	if (!$x) {
@@ -56,7 +56,7 @@ $app->get('/privacypolicy', function (Request $r, Response $res) {
 	$res->getBody()->write(file_get_contents("pp.html"));
 });
 
-$app->post('/', function (Request $req, Response $res) {
+$app->post('/', function (Request $req, Response $res) use ($m) {
 	// get the pageId we're hooked up to!
 	$pageId = Settings::get_ini_value('facebook', 'page_id');
 
