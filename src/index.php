@@ -56,6 +56,10 @@ $app->get('/privacypolicy', function (Request $r, Response $res) {
 	$res->getBody()->write(file_get_contents("pp.html"));
 });
 
+$app->get('/delete', function (Request $r, Response $res) use ($m) {
+	$m->flush();
+});
+
 $app->post('/', function (Request $req, Response $res) use ($m) {
 	// get the pageId we're hooked up to!
 	$pageId = Settings::get_ini_value('facebook', 'page_id');
