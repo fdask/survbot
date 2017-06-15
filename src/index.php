@@ -1,6 +1,4 @@
 <?php
-session_start();
-
 require '../vendor/autoload.php';
 
 use \Psr\Http\Message\ServerRequestInterface as Request;
@@ -8,6 +6,16 @@ use \Psr\Http\Message\ResponseInterface as Response;
 
 use fdask\surveybot\Settings;
 use fdask\surveybot\FB;
+
+/**
+Your current age 
+2. Are you currently receiving ssdi or ssi benefits? Must be no 
+3. Are you currently our of work or expect to be for a year? Must be yes
+4. have you worked at least 5 of the past 10 years? YES / NO (either)
+5.Have you been treated by a doctor in the last year?
+6. Please describe your case. (response will indicate we will make a call to discuss results and options
+7. Request phone # - time to call back (If possible would be great to get city, state, address, zip )
+**/
 
 $config = [
 	'settings' => [
@@ -65,9 +73,92 @@ $app->post('/', function (Request $req, Response $res) {
 							$senderId = $message['sender']['id'];
 							$message = $message['message']['text'];
 
+							session_name($senderId);
+							session_start();
+
+							if (!isset($_SESSION['state'])) {
+								$_SESSION['state'] = 1;
+							}
+
+							switch ($_SESSION['state']) {
+								case 1:
+									$msg = "What is your current age?";
+
+									$_SESSION['state']++;
+
+									break;
+								case 2:
+									// Are you currently receiving ssdi or ssi benefits? Must be no 
+									if (preg_match("@(\d+)@", $message, $matches)) {
+										$age = (int)$matches[1];
+
+										if ($age >= 18 && $age <= 99) {
+											$_SESSION['age'] = $age;
+
+											$_SESSION['state']++;
+
+											$msg = "Are you current receiving SSDI or SSI benefits?";
+										} else {
+											$msg = "The age you provided doesn't look right.  Can you please indicate your age using numbers?  (18-99)";
+										}
+									} else {
+										$msg = "Could not understand your response.  Can you please indicate your age using numbers?  (18-99)";
+									}
+
+									break;
+								case 3:
+									// Are you currently our of work or expect to be for a year? Must be yes
+									$_SESSION['benefits'] = $message;
+									$_SESSION['state']++;
+
+									$msg = "Are you currently out of work or expect to be for a year?";
+
+									break;
+								case 4:
+									// have you worked at least 5 of the past 10 years? YES / NO (either)
+									$_SESSION['outofwork'] = $message;
+									$_SESSION['state']++;
+
+									$msg = "Have you worked at least 5 of the past 10 years?";
+
+									break;
+								case 5:
+									// Have you been treated by a doctor in the last year?
+									$_SESSION['fiveoften'] = $message;
+									$_SESSION['state']++;
+
+									$msg = "Have you been treated by a doctor in the last year?";
+
+									break;
+								case 6:
+									// Please describe your case. (response will indicate we will make a call to discuss results and options
+									$_SESSION['doctor'] = $message;
+									$_SESSION['state']++;
+
+									$msg = "Please describe your case.";
+
+									break;
+								case 7:
+									// Request phone # - time to call back (If possible would be great to get city, state, address, zip )
+									$_SESSION['case'] = $message;
+									$_SESSION['state']++;
+
+									$msg = "Please provide your phone number, and an appropriate time to call you!";
+
+									break;
+								case 8:
+									$_SESSION['phone'] = $message;
+								
+									$msg = "Thank you!";
+
+									break;
+								default:
+									// we don't know where this user falls!
+							}
+
 							error_log("User $senderId said '$message'");
 
-							if (FB::sendMessage($senderId, "BEEP!")) {
+							if (FB::sendMessage($senderId, $msg)) {
 								error_log("Reply successfully sent");
 							} else {
 								error_log("Error sending reply!");
