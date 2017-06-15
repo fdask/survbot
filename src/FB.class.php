@@ -67,6 +67,28 @@ class FB {
 	}
 
 	/**
+	* gets the details about a user communicating with you
+	*
+	* @param integer $userId
+	* @return false|array
+	**/
+	public static function getUser($userId) {
+		$fb = self::getFb();
+
+		try {
+			$response = $fb->get("/$userId?fields=first_name,last_name,profile_pic,locale,timezone,gender");
+
+			if ($response) {
+				return $response->getDecodedBody();
+			}
+		} catch (\Exception $e) {
+			print_r($e);
+		}
+
+		return false;
+	}
+
+	/**
 	* outputs info about the given facebook token
 	*
 	* @link https://developers.facebook.com/docs/facebook-login/access-tokens/debugging-and-error-handling

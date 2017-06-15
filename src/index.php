@@ -83,6 +83,15 @@ $app->post('/', function (Request $req, Response $res) use ($m) {
 							if (!$data) {
 								error_log("No state set.  Starting from ONE.");
 
+								// lets retrieve the users details to save!
+								$ret = FB::getUser($senderId);
+	
+								if ($ret) {
+									foreach ($ret as $key => $value) {
+										$data[$key] = $value;
+									}
+								}
+
 								$data['state'] = 1;								
 							}
 
