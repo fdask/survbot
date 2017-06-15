@@ -168,6 +168,8 @@ $app->post('/', function (Request $req, Response $res) {
 						} 
 					} else {
 						error_log("'message' isnt set in the message variable!");
+
+						error_log(print_r($message, true));
 					}
 				}
 			} else {
