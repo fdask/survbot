@@ -105,11 +105,15 @@ $app->post('/', function (Request $req, Response $res) use ($m) {
 								case 1:
 									$msg = "What is your current age?";
 
+									error_log("Processing state 1\n");
+
 									$data['state']++;
 
 									break;
 								case 2:
 									// Are you currently receiving ssdi or ssi benefits? Must be no 
+									error_log("Processing state 2\n");
+
 									if (preg_match("@(\d+)@", $message, $matches)) {
 										$age = (int)$matches[1];
 
@@ -175,6 +179,7 @@ $app->post('/', function (Request $req, Response $res) use ($m) {
 									break;
 								default:
 									// we don't know where this user falls!
+									error_log("Got a value for data state of '{$data['state']}'");
 							}
 
 							error_log(print_r($data, true));
