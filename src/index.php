@@ -1,7 +1,4 @@
 <?php
-session_name("ABC");
-session_start();
-
 require '../vendor/autoload.php';
 
 use \Psr\Http\Message\ServerRequestInterface as Request;
@@ -74,8 +71,8 @@ $app->post('/', function (Request $req, Response $res) {
 							$senderId = $message['sender']['id'];
 							$message = $message['message']['text'];
 
-							//session_name("survey-$senderId");
-							//session_start();
+							session_name("survey-$senderId");
+							session_start();
 
 							error_log("SESSION NAME: " . session_name());
 
@@ -160,6 +157,8 @@ $app->post('/', function (Request $req, Response $res) {
 								default:
 									// we don't know where this user falls!
 							}
+
+							session_write_close();
 
 							error_log("User $senderId said '$message'");
 
