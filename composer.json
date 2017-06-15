@@ -8,6 +8,7 @@
    "require-dev": {
    },
    "require": {
+		"php": ">=5.6",
       "slim/slim": "3.8.1",
       "facebook/graph-sdk": "5.5.0",
       "ext-memcached": "*"

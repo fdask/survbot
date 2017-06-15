@@ -33,6 +33,25 @@ $app->get('/', function (Request $r, Response $res) {
 	$res->getBody()->write($qs['hub_challenge']);
 });
 
+$app->get('/test', function (Request $r, Response $res) {
+	$x = Memcached::get("abc");
+
+	if (!$x) {
+		$resp = "No x is set!  Initializing it now";
+		$x = array(
+			'abc' => "hello"
+		);
+
+		if (!Memcached::set("abc", $x)) {
+			$resp .= "\nFailed to write memcache data!";
+		}
+	} else {
+		$resp = print_r($x, true);
+	}
+
+	$res->getBody()->write($resp);
+});
+
 $app->get('/privacypolicy', function (Request $r, Response $res) {
 	$res->getBody()->write(file_get_contents("pp.html"));
 });
