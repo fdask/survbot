@@ -97,6 +97,8 @@ $app->post('/', function (Request $req, Response $res) use ($m) {
 								}
 
 								$data['state'] = 1;								
+
+								error_log(print_r($data, true));
 							}
 
 							switch ($data['state']) {
