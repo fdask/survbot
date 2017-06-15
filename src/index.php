@@ -1,6 +1,8 @@
 <?php
 require '../vendor/autoload.php';
 
+include 'memcachier.inc.php';
+
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
@@ -35,23 +37,6 @@ $app->get('/privacypolicy', function (Request $r, Response $res) {
 	$res->getBody()->write(file_get_contents("pp.html"));
 });
 
-// testing out the session handling
-$app->get('/session', function (Request $req, Response $res) {
-	if (!isset($_SESSION['count'])) {
-		$_SESSION['count'] = 1;
-	} else {
-		$_SESSION['count']++;
-	}
-
-	$res->getBody()->write("Count is " . $_SESSION['count']);
-});
-
-$app->get('/sd', function (Request $req, Response $res) {
-	session_destroy();
-
-	$res->getBody()->write("Session is destroyed!");
-});
-
 $app->post('/', function (Request $req, Response $res) {
 	// get the pageId we're hooked up to!
 	$pageId = Settings::get_ini_value('facebook', 'page_id');
@@ -71,22 +56,22 @@ $app->post('/', function (Request $req, Response $res) {
 							$senderId = $message['sender']['id'];
 							$message = $message['message']['text'];
 
-							session_name("survey-$senderId");
-							session_start();
+							$key = "survey-$senderId";
 
-							error_log("SESSION NAME: " . session_name());
+							// load up the users previous responses
+							$data = Memcached::get($key);
 
-							error_log(print_r($_SESSION, true));
+							if (!$data) {
+								error_log("No state set.  Starting from ONE.");
 
-							if (!isset($_SESSION['state'])) {
-								$_SESSION['state'] = 1;
+								$data['state'] = 1;								
 							}
 
-							switch ($_SESSION['state']) {
+							switch ($data['state']) {
 								case 1:
 									$msg = "What is your current age?";
 
-									$_SESSION['state'] = 2;
+									$data['state']++;
 
 									break;
 								case 2:
@@ -95,9 +80,9 @@ $app->post('/', function (Request $req, Response $res) {
 										$age = (int)$matches[1];
 
 										if ($age >= 18 && $age <= 99) {
-											$_SESSION['age'] = $age;
+											$data['age'] = $age;
 
-											$_SESSION['state'] = 3;
+											$data['state']++;
 
 											$msg = "Are you currently receiving SSDI or SSI benefits?";
 										} else {
@@ -110,46 +95,46 @@ $app->post('/', function (Request $req, Response $res) {
 									break;
 								case 3:
 									// Are you currently our of work or expect to be for a year? Must be yes
-									$_SESSION['benefits'] = $message;
-									$_SESSION['state']++;
+									$data['benefits'] = $message;
+									$data['state']++;
 
 									$msg = "Are you currently out of work or expect to be for a year?";
 
 									break;
 								case 4:
 									// have you worked at least 5 of the past 10 years? YES / NO (either)
-									$_SESSION['outofwork'] = $message;
-									$_SESSION['state']++;
+									$data['outofwork'] = $message;
+									$data['state']++;
 
 									$msg = "Have you worked at least 5 of the past 10 years?";
 
 									break;
 								case 5:
 									// Have you been treated by a doctor in the last year?
-									$_SESSION['fiveoften'] = $message;
-									$_SESSION['state']++;
+									$data['fiveoften'] = $message;
+									$data['state']++;
 
 									$msg = "Have you been treated by a doctor in the last year?";
 
 									break;
 								case 6:
 									// Please describe your case. (response will indicate we will make a call to discuss results and options
-									$_SESSION['doctor'] = $message;
-									$_SESSION['state']++;
+									$data['doctor'] = $message;
+									$data['state']++;
 
 									$msg = "Please describe your case.";
 
 									break;
 								case 7:
 									// Request phone # - time to call back (If possible would be great to get city, state, address, zip )
-									$_SESSION['case'] = $message;
-									$_SESSION['state']++;
+									$data['case'] = $message;
+									$data['state']++;
 
 									$msg = "Please provide your phone number, and an appropriate time to call you!";
 
 									break;
 								case 8:
-									$_SESSION['phone'] = $message;
+									$data['phone'] = $message;
 								
 									$msg = "Thank you!";
 
@@ -158,7 +143,9 @@ $app->post('/', function (Request $req, Response $res) {
 									// we don't know where this user falls!
 							}
 
-							session_write_close();
+							if (!Memcached::set($key, $data)) {
+								error_log("There was an issue saving the memcache data!");
+							}
 
 							error_log("User $senderId said '$message'");
 
