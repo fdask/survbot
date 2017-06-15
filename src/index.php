@@ -68,13 +68,13 @@ $app->post('/', function (Request $req, Response $res) {
 						$recipientId = $message['recipient']['id'];
 
 						if ($recipientId == $pageId) {
-							// see if we already have a session for this user!
-							
 							$senderId = $message['sender']['id'];
 							$message = $message['message']['text'];
 
 							session_name("survey-$senderId");
 							session_start();
+
+							error_log(print_r($_SESSION, true));
 
 							if (!isset($_SESSION['state'])) {
 								$_SESSION['state'] = 1;
