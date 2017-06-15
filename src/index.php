@@ -34,7 +34,7 @@ $app->get('/', function (Request $r, Response $res) {
 });
 
 $app->get('/test', function (Request $r, Response $res) {
-	$x = Memcached::get("abc");
+	$x = $m->get("abc");
 
 	if (!$x) {
 		$resp = "No x is set!  Initializing it now";
@@ -42,7 +42,7 @@ $app->get('/test', function (Request $r, Response $res) {
 			'abc' => "hello"
 		);
 
-		if (!Memcached::set("abc", $x)) {
+		if (!$m->set("abc", $x)) {
 			$resp .= "\nFailed to write memcache data!";
 		}
 	} else {
@@ -78,7 +78,7 @@ $app->post('/', function (Request $req, Response $res) {
 							$key = "survey-$senderId";
 
 							// load up the users previous responses
-							$data = Memcached::get($key);
+							$data = $m->get($key);
 
 							if (!$data) {
 								error_log("No state set.  Starting from ONE.");
@@ -162,7 +162,7 @@ $app->post('/', function (Request $req, Response $res) {
 									// we don't know where this user falls!
 							}
 
-							if (!Memcached::set($key, $data)) {
+							if (!$m->set($key, $data)) {
 								error_log("There was an issue saving the memcache data!");
 							}
 
