@@ -73,7 +73,7 @@ $app->post('/', function (Request $req, Response $res) {
 							$senderId = $message['sender']['id'];
 							$message = $message['message']['text'];
 
-							session_name($senderId);
+							session_name("survey-$senderId");
 							session_start();
 
 							if (!isset($_SESSION['state'])) {
