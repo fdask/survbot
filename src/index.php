@@ -1,4 +1,5 @@
 <?php
+session_name("ABC");
 session_start();
 
 require '../vendor/autoload.php';
