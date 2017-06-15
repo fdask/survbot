@@ -86,7 +86,7 @@ $app->post('/', function (Request $req, Response $res) {
 								case 1:
 									$msg = "What is your current age?";
 
-									$_SESSION['state']++;
+									$_SESSION['state'] = 2;
 
 									break;
 								case 2:
@@ -97,9 +97,9 @@ $app->post('/', function (Request $req, Response $res) {
 										if ($age >= 18 && $age <= 99) {
 											$_SESSION['age'] = $age;
 
-											$_SESSION['state']++;
+											$_SESSION['state'] = 3;
 
-											$msg = "Are you current receiving SSDI or SSI benefits?";
+											$msg = "Are you currently receiving SSDI or SSI benefits?";
 										} else {
 											$msg = "The age you provided doesn't look right.  Can you please indicate your age using numbers?  (18-99)";
 										}
@@ -166,20 +166,20 @@ $app->post('/', function (Request $req, Response $res) {
 								error_log("Error sending reply!");
 							}
 						} else {
-							error_log("Message is addressed to $recipientId!  We're looking for ones addressed to $pageId");
+							// error_log("Message is addressed to $recipientId!  We're looking for ones addressed to $pageId");
 						} 
 					} else {
-						error_log("'message' isnt set in the message variable!");
+						// error_log("'message' isnt set in the message variable!");
 
-						error_log(print_r($message, true));
+						// error_log(print_r($message, true));
 					}
 				}
 			} else {
-				error_log("'messaging' isnt set in the entry variable!");
+				// error_log("'messaging' isnt set in the entry variable!");
 			}
 		}
 	} else {
-		error_log("'entry' isnt set in the parsedBody variable!");
+		// error_log("'entry' isnt set in the parsedBody variable!");
 	}
 });
 
