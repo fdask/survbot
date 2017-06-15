@@ -76,6 +76,8 @@ $app->post('/', function (Request $req, Response $res) {
 							//session_name("survey-$senderId");
 							//session_start();
 
+							error_log("SESSION NAME: " . session_name());
+
 							error_log(print_r($_SESSION, true));
 
 							if (!isset($_SESSION['state'])) {
