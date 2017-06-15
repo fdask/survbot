@@ -177,6 +177,8 @@ $app->post('/', function (Request $req, Response $res) use ($m) {
 									// we don't know where this user falls!
 							}
 
+							error_log(print_r($data, true));
+
 							if (!$m->set($key, $data)) {
 								error_log("There was an issue saving the memcache data!");
 							}
