@@ -104,7 +104,6 @@ $app->post('/', function (Request $req, Response $res) use ($m) {
 							// load up the users previous responses
 							$data = $m->get($key);
 
-							/*
 							if (!$data || !isset($data['state'])) {
 								error_log("No state set.  Starting from ONE.");
 
@@ -126,6 +125,7 @@ $app->post('/', function (Request $req, Response $res) use ($m) {
 								error_log(print_r($data, true));
 							} 
 
+							/*
 							switch ($data['state']) {
 								case 1:
 									$msg = "What is your current age?";
@@ -206,13 +206,13 @@ $app->post('/', function (Request $req, Response $res) use ($m) {
 									// we don't know where this user falls!
 									error_log("Got a value for data state of '{$data['state']}'");
 							}
+							*/
 
 							error_log(print_r($data, true));
 
 							if (!$m->set($key, $data)) {
 								error_log("There was an issue saving the memcache data!");
 							}
-							*/
 							$msg = "response";
 
 							error_log("User $senderId said '$message'");
