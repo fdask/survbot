@@ -126,6 +126,8 @@ $app->post('/', function (Request $req, Response $res) use ($m) {
 							} 
 
 							$extras = null;
+							$finished = "Thank you for your inquiry but based on your answer you do not appear to meet the minimum requirements and should contact SSA directly to learn more. Our legal assistance is for those are over 50, currently out of work, having worked 5 of the last 10 years and not currently receiving ssd or ssi benefits. You may still be eligible for SSI benefits which you may apply for on your own. You can learn more at www.ssa.gov.";
+
 							$yesNo = array(
 								'quick_replies' => array(
 									array(
@@ -190,12 +192,12 @@ $app->post('/', function (Request $req, Response $res) use ($m) {
 
 									if (preg_match("@[yY]@", $message)) {
 										// yes!
-										$msg = "Unfortunately, based on your answers it appears we won't be a good fit for you at this time.";
+										$msg = $finished;
 										$data['state'] = 20;	
 									} else if (preg_match("@[nN]@", $message)) {
 										// user does not qualify
 										$msg = "Are you currently out of work or expect to be for a year?";
-										$extras = $yesNo2;
+										$extras = $yesNo;
 										$data['state']++;
 									} else {
 										$msg = "Could not understand your response.  Please indicate Yes / No by either typing out your response, or using one of the quick reply buttons provided.";
@@ -213,7 +215,7 @@ $app->post('/', function (Request $req, Response $res) use ($m) {
 										$data['state']++;
 									} else if (preg_match("@[nN]@", $message)) {
 										// user does not qualify
-										$msg = "Unfortunately, based on your answers it appears we won't be a good fit for you at this time.";
+										$msg = $finished;
 										$data['state'] = 20;	
 									} else {
 										$msg = "Could not understand your response.  Please indicate Yes / No by either typing out your response, or using one of the quick reply buttons provided.";
@@ -264,11 +266,12 @@ $app->post('/', function (Request $req, Response $res) use ($m) {
 								case 10:
 									// the user has completed everything!
 									$msg = "Your contact details are already on file!  An operator will be in touch with you shortly.";	
-									
+									$msg .= print_r($data, true);
+	
 									break;
 								case 20:
 									// the user didn't qualify!
-									$msg = "Unfortunately, based on your answers it appears we won't be a good fit for you at this time.";
+									$msg = $finished;
 
 									break;
 								default:

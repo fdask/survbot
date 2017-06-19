@@ -72,6 +72,46 @@ class FB {
 	}
 
 	/**
+	* sends a message containing buttons to the specified user
+	*
+	* @param integer $recipientId
+	* @param string $text
+	* @param array $buttons
+	* @return boolean
+	**/
+	public static function sendButtons($recipientId, $text, $buttons) {
+		$fb = self::getFb();
+
+		$params = array(
+			'recipient' => array(
+				'id' => $recipientId
+			),
+			'message' => array(
+				'attachment' => array(
+					'type' => 'template',
+					'payload' => array(
+						'template_type' => 'button',
+						'text' => $text,
+						'buttons' => $buttons
+					)
+				)
+			)
+		);
+
+		try {
+			$response = $fb->post("/me/messages", $params);
+
+			$ret = $response->getDecodedBody();
+
+			return $ret;
+		} catch (\Exception $e) {
+			error_log(print_r($e, true));
+		}
+
+		return false;
+	}
+
+	/**
 	* gets the details about a user communicating with you
 	*
 	* @param integer $userId
