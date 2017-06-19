@@ -104,6 +104,7 @@ $app->post('/', function (Request $req, Response $res) use ($m) {
 							// load up the users previous responses
 							$data = $m->get($key);
 
+							/*
 							if (!$data || !isset($data['state'])) {
 								error_log("No state set.  Starting from ONE.");
 
@@ -211,6 +212,8 @@ $app->post('/', function (Request $req, Response $res) use ($m) {
 							if (!$m->set($key, $data)) {
 								error_log("There was an issue saving the memcache data!");
 							}
+							*/
+							$msg = "response";
 
 							error_log("User $senderId said '$message'");
 
