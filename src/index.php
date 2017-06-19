@@ -204,6 +204,8 @@ $app->post('/', function (Request $req, Response $res) use ($m) {
 								default:
 									// we don't know where this user falls!
 									error_log("Got a value for data state of '{$data['state']}'");
+			
+									$msg = "There was an error!";
 							}
 
 							error_log(print_r($data, true));
@@ -211,7 +213,6 @@ $app->post('/', function (Request $req, Response $res) use ($m) {
 							if (!$m->set($key, $data)) {
 								error_log("There was an issue saving the memcache data!");
 							}
-							$msg = "response";
 
 							error_log("User $senderId said '$message'");
 
