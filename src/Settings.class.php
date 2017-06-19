@@ -59,7 +59,7 @@ class Settings {
 	* @param string $key
 	* @return string
 	**/
-	public static function get_ini_value($section, $key) {
+	public static function getIniValue($section, $key) {
 		if (is_null(static::$_iniData)) {
 			static::_loadIniFile();
 		}
@@ -81,7 +81,7 @@ class Settings {
 	* @param string $section
 	* @return array
 	**/
-	public static function get_ini_section($section) {
+	public static function getIniSection($section) {
 		if (is_null(static::$_iniData)) {
 			static::_loadIniFile();
 		}

@@ -27,6 +27,10 @@ $config = [
 
 $app = new \Slim\App($config);
 
+$app->get('/phpinfo', function (Request $r, Response $res) {
+	phpinfo();
+});
+
 $app->get('/', function (Request $r, Response $res) {
 	$qs = $r->getQueryParams();
 
@@ -100,7 +104,7 @@ $app->post('/', function (Request $req, Response $res) use ($m) {
 							// load up the users previous responses
 							$data = $m->get($key);
 
-							if (!$data) {
+							if (!$data || !isset($data['state'])) {
 								error_log("No state set.  Starting from ONE.");
 
 								// lets retrieve the users details to save!
@@ -115,7 +119,7 @@ $app->post('/', function (Request $req, Response $res) use ($m) {
 								$data['state'] = 1;								
 
 								error_log(print_r($data, true));
-							}
+							} 
 
 							switch ($data['state']) {
 								case 1:
