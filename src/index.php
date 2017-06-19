@@ -125,6 +125,8 @@ $app->post('/', function (Request $req, Response $res) use ($m) {
 								error_log(print_r($data, true));
 							} 
 
+							$extras = null;
+
 							switch ($data['state']) {
 								case 1:
 									$msg = "What is your current age?";
@@ -147,6 +149,20 @@ $app->post('/', function (Request $req, Response $res) use ($m) {
 											$data['state']++;
 
 											$msg = "Are you currently receiving SSDI or SSI benefits?";
+											$extras = array(
+												'quick_replies' => array(
+													array(
+														'content_type' => 'text',
+														'title' => 'Yes',
+														'payload' => "YES"
+													),
+													array(
+														'content_type' => 'text',
+														'title' => 'No',
+														'payload' => "NO"
+													)
+												)
+											);
 										} else {
 											$msg = "The age you provided doesn't look right.  Can you please indicate your age using numbers?  (18-99)";
 										}

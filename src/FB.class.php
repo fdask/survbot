@@ -37,9 +37,10 @@ class FB {
 	*
 	* @param integer $recipientId who to send the message to
 	* @param string $text the message to send
+	* @param array $extras additional stuff to add to the message block
 	* @return boolean
 	**/
-	public static function sendMessage($recipientId, $text) {
+	public static function sendMessage($recipientId, $text, $extras = null) {
 		$fb = self::getFb();
 
 		$params = array(
@@ -50,6 +51,12 @@ class FB {
 				'text' => $text
 			)
 		);
+
+		if (!is_null($extras)) {
+			foreach ($extras as $k => $v) {
+				$params['message'][$k] = $v;
+			}
+		}
 
 		try {
 			$response = $fb->post("/me/messages", $params);
