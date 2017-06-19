@@ -42,6 +42,8 @@ $app->get('/dump', function (Request $r, Response $res) use ($m) {
 		foreach ($keys as $key) {
 			$data[$key] = $m->get($key);			
 		}
+	} else {
+		error_log("Keys is empty!");
 	}
 
 	$res->getBody()->write(print_r($data, true));
@@ -76,7 +78,7 @@ $app->get('/delete', function (Request $r, Response $res) use ($m) {
 
 $app->post('/', function (Request $req, Response $res) use ($m) {
 	// get the pageId we're hooked up to!
-	$pageId = Settings::get_ini_value('facebook', 'page_id');
+	$pageId = Settings::getIniValue('facebook', 'page_id');
 
 	// parse out the posted message
 	$parsedBody = $req->getParsedBody();
@@ -105,8 +107,8 @@ $app->post('/', function (Request $req, Response $res) use ($m) {
 								$ret = FB::getUser($senderId);
 	
 								if ($ret) {
-									foreach ($ret as $key => $value) {
-										$data[$key] = $value;
+									foreach ($ret as $k => $v) {
+										$data[$k] = $v;
 									}
 								}
 
