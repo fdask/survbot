@@ -21,12 +21,12 @@ class FB {
       // if we don't have an fb value already set, load one from the settings file
       if (is_null(static::$fb)) {
          static::$fb = new \Facebook\Facebook(array(
-            'app_id' => Settings::get_ini_value('facebook', 'app_id'),
-            'app_secret' => Settings::get_ini_value('facebook', 'app_secret'),
-            'default_graph_version' => Settings::get_ini_value('facebook', 'graph_version')
+            'app_id' => getenv("FB_APP_ID"), 
+            'app_secret' => getenv("FB_APP_SECRET"),
+            'default_graph_version' => getenv("FB_GRAPH_VERSION")
          ));
 
-         static::$fb->setDefaultAccessToken(Settings::get_ini_value('facebook', 'page_access_token'));
+         static::$fb->setDefaultAccessToken(getenv("FB_PAGE_TOKEN"));
       }
 
       return static::$fb;
@@ -56,7 +56,7 @@ class FB {
 
 			$ret = $response->getDecodedBody();
 
-			error_log($ret);
+			error_log(print_r($ret, true));
 
 			return $ret;
 		} catch (\Exception $e) {
