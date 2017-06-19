@@ -232,7 +232,7 @@ $app->post('/', function (Request $req, Response $res) use ($m) {
 
 							error_log("User $senderId said '$message'");
 
-							if (FB::sendMessage($senderId, $msg)) {
+							if (FB::sendMessage($senderId, $msg, $extras)) {
 								error_log("Reply successfully sent");
 							} else {
 								error_log("Error sending reply!");
