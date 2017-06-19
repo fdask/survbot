@@ -125,7 +125,6 @@ $app->post('/', function (Request $req, Response $res) use ($m) {
 								error_log(print_r($data, true));
 							} 
 
-							/*
 							switch ($data['state']) {
 								case 1:
 									$msg = "What is your current age?";
@@ -206,7 +205,6 @@ $app->post('/', function (Request $req, Response $res) use ($m) {
 									// we don't know where this user falls!
 									error_log("Got a value for data state of '{$data['state']}'");
 							}
-							*/
 
 							error_log(print_r($data, true));
 

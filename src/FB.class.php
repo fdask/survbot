@@ -56,8 +56,6 @@ class FB {
 
 			$ret = $response->getDecodedBody();
 
-			error_log(print_r($ret, true));
-
 			return $ret;
 		} catch (\Exception $e) {
 			error_log(print_r($e, true));
