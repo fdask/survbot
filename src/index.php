@@ -1,13 +1,13 @@
 <?php
 require '../vendor/autoload.php';
 
-include 'memcachier.inc.php';
-
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
 use fdask\surveybot\Settings;
 use fdask\surveybot\FB;
+
+include 'memcachier.inc.php';
 
 /**
 Your current age 

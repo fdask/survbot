@@ -56,11 +56,11 @@ class FB {
 
 			$ret = $response->getDecodedBody();
 
-			print_r($ret);
+			error_log($ret);
 
-			return true;
+			return $ret;
 		} catch (\Exception $e) {
-			print_r($e);
+			error_log(print_r($e, true));
 		}
 
 		return false;
@@ -82,7 +82,7 @@ class FB {
 				return $response->getDecodedBody();
 			}
 		} catch (\Exception $e) {
-			print_r($e);
+			error_log(print_r($e, true));
 		}
 
 		return false;
@@ -107,7 +107,7 @@ class FB {
 				return $ret;
 			}
 		} catch (\Exception $e) {
-			print_r($e);
+			error_log(print_r($e, true));
 		}
 
 		return false;
@@ -135,7 +135,7 @@ class FB {
 
 			return $ret;
 		} catch (\Exception $e) {
-			print_r($e);
+			error_log(print_r($e, true));
 		}
 
 		return false;
