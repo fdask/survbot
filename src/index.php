@@ -168,10 +168,9 @@ $app->post('/', function (Request $req, Response $res) use ($m) {
 									break;
 								case 2:
 									// Are you currently receiving ssdi or ssi benefits? Must be no 
-									$data['age'] = $age;
-
 									if (preg_match("@(\d+)@", $message, $matches)) {
 										$age = (int)$matches[1];
+										$data['age'] = $age;
 
 										if ($age >= 18 && $age <= 99) {
 											$data['state']++;
