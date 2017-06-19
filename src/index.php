@@ -112,8 +112,12 @@ $app->post('/', function (Request $req, Response $res) use ($m) {
 	
 								if ($ret) {
 									foreach ($ret as $k => $v) {
+										error_log("Setting '$k' to '$v'");
+
 										$data[$k] = $v;
 									}
+								} else {
+									error_log("Facebook API call failed!");
 								}
 
 								$data['state'] = 1;								
