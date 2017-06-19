@@ -126,43 +126,55 @@ $app->post('/', function (Request $req, Response $res) use ($m) {
 							} 
 
 							$extras = null;
+							$yesNo = array(
+								'quick_replies' => array(
+									array(
+										'content_type' => 'text',
+										'title' => 'Yes',
+										'payload' => 'YES'
+									),
+									array(
+										'content_type' => 'text',
+										'title' => 'No',
+										'payload' => 'NO'
+									)
+								)
+							);
+
+							$yesNo2 = array(
+								'buttons' => array(
+									array(
+										'type' => 'postback',
+										'title' => 'Yes',
+										'payload' => 'YES'	
+									),
+									array(
+										'type' => 'postback',
+										'title' => 'No',
+										'payload' => 'NO'	
+									)
+								)
+							);
 
 							switch ($data['state']) {
 								case 1:
 									$msg = "What is your current age?";
-
-									error_log("Processing state 1\n");
 
 									$data['state']++;
 
 									break;
 								case 2:
 									// Are you currently receiving ssdi or ssi benefits? Must be no 
-									error_log("Processing state 2\n");
+									$data['age'] = $age;
 
 									if (preg_match("@(\d+)@", $message, $matches)) {
 										$age = (int)$matches[1];
 
 										if ($age >= 18 && $age <= 99) {
-											$data['age'] = $age;
-
 											$data['state']++;
 
 											$msg = "Are you currently receiving SSDI or SSI benefits?";
-											$extras = array(
-												'quick_replies' => array(
-													array(
-														'content_type' => 'text',
-														'title' => 'Yes',
-														'payload' => "YES"
-													),
-													array(
-														'content_type' => 'text',
-														'title' => 'No',
-														'payload' => "NO"
-													)
-												)
-											);
+											$extras = $yesNo;
 										} else {
 											$msg = "The age you provided doesn't look right.  Can you please indicate your age using numbers?  (18-99)";
 										}
@@ -174,25 +186,51 @@ $app->post('/', function (Request $req, Response $res) use ($m) {
 								case 3:
 									// Are you currently our of work or expect to be for a year? Must be yes
 									$data['benefits'] = $message;
-									$data['state']++;
 
-									$msg = "Are you currently out of work or expect to be for a year?";
+									if (preg_match("@[yY]@", $message)) {
+										// yes!
+										$msg = "Unfortunately, based on your answers it appears we won't be a good fit for you at this time.";
+										$data['state'] = 20;	
+									} else if (preg_match("@[nN]@", $message)) {
+										// user does not qualify
+										$msg = "Are you currently out of work or expect to be for a year?";
+										$extras = $yesNo2;
+										$data['state']++;
+									} else {
+										$msg = "Could not understand your response.  Please indicate Yes / No by either typing out your response, or using one of the quick reply buttons provided.";
+									}
 
 									break;
 								case 4:
 									// have you worked at least 5 of the past 10 years? YES / NO (either)
 									$data['outofwork'] = $message;
-									$data['state']++;
 
-									$msg = "Have you worked at least 5 of the past 10 years?";
+									if (preg_match("@[yY]@", $message)) {
+										// yes!
+										$msg = "Have you worked at least 5 of the past 10 years?";
+										$extras = $yesNo;
+										$data['state']++;
+									} else if (preg_match("@[nN]@", $message)) {
+										// user does not qualify
+										$msg = "Unfortunately, based on your answers it appears we won't be a good fit for you at this time.";
+										$data['state'] = 20;	
+									} else {
+										$msg = "Could not understand your response.  Please indicate Yes / No by either typing out your response, or using one of the quick reply buttons provided.";
+									}
 
 									break;
 								case 5:
-									// Have you been treated by a doctor in the last year?
 									$data['fiveoften'] = $message;
-									$data['state']++;
 
-									$msg = "Have you been treated by a doctor in the last year?";
+									// Have you been treated by a doctor in the last year?
+									if (preg_match("@[yYNn]@", $message)) {
+										// yes OR no
+										$msg = "Have you been treated by a doctor in the last year?";
+										$extras = $yesNo;
+										$data['state']++;
+									} else {
+										$msg = "Could not understand your response.  Please indicate Yes / No by either typing out your response, or using one of the quick reply buttons provided.";
+									}
 
 									break;
 								case 6:
@@ -213,8 +251,23 @@ $app->post('/', function (Request $req, Response $res) use ($m) {
 									break;
 								case 8:
 									$data['phone'] = $message;
+
+									// attempt to push the lead details into leadspedia!
+									if (1) {
+										$data['state'] = 10;
+									}
 								
 									$msg = "Thank you!";
+
+									break;
+								case 10:
+									// the user has completed everything!
+									$msg = "Your contact details are already on file!  An operator will be in touch with you shortly.";	
+									
+									break;
+								case 20:
+									// the user didn't qualify!
+									$msg = "Unfortunately, based on your answers it appears we won't be a good fit for you at this time.";
 
 									break;
 								default:
