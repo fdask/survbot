@@ -142,6 +142,7 @@ $app->post('/', function (Request $req, Response $res) use ($m) {
 							);
 
 							$yesNo2 = array(
+								'template_type' => 'button',
 								'buttons' => array(
 									array(
 										'type' => 'postback',
